@@ -9,7 +9,7 @@ namespace HS_BG_Api.Controllers
     public class UsersController : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<List<Users>>> Get(string server = "eu")
+        public async Task<ActionResult<List<Users>>> Get(string? server = "eu")
         {
             if (server == string.Empty)
             {
@@ -22,7 +22,11 @@ namespace HS_BG_Api.Controllers
                 return StatusCode(404, "Неправильный сервер");
             }
             var _users = Methods.GetUsers(server);
-
+            for (int i = 0; i < _users.Count; i++)
+            {
+                if (_users[i].Name.EndsWith(" (1)"))
+                    _users[i].Name = _users[i].Name.Replace(" (1)", "");
+            }
             return Ok(_users);
         }
         [HttpGet]
